@@ -24,6 +24,7 @@ import android.webkit.WebView;
 
 public class MainActivity extends AppCompatActivity {
 
+    WebView webView;
     // The URL Site we will load into the native app
     public final static String URL_SITE = "http://demo.hizup.com/pH7CMS";
 
@@ -34,10 +35,24 @@ public class MainActivity extends AppCompatActivity {
 
         WebView view = (WebView) this.findViewById(R.id.webView);
         view.getSettings().setJavaScriptEnabled(true);
-        view.setWebViewClient(new MyBrowser());
-        view.loadUrl(URL_SITE);
+        webView = (WebView) findViewById(R.id.webView);
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                return super.shouldOverrideUrlLoading(view, request);
+            }
+        });
+        webView.loadUrl(URL_SITE);
     }
-
+    
+    @Override
+    public void onBackPressed() {
+        if(webView!=null && webView.canGoBack())
+            webView.goBack();// if there is previous page open it
+        else
+            super.onBackPressed();//if there is no previous page, close app
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
